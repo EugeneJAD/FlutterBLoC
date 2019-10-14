@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_practice/data/model/todomodel.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_practice/screens/todo/widgets/todo_list_item.dart';
 
 class TodoPage extends StatefulWidget {
   TodoPage(this._repository);
+
   final TodoRepository _repository;
 
   @override
@@ -15,11 +18,13 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage> {
   TodoBloc _todoBloc;
+  Completer<void> _refreshCompleter;
 
   @override
   void initState() {
     _todoBloc = TodoBloc(widget._repository);
     _todoBloc.loadTodoList();
+    _refreshCompleter = Completer<void>();
     super.initState();
   }
 
@@ -36,6 +41,8 @@ class _TodoPageState extends State<TodoPage> {
           stream: _todoBloc.todos,
           builder: (context, snapshot) {
             if (snapshot.data is TodoDataLoaded) {
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
               return _buildList((snapshot.data as TodoDataLoaded).todos);
             } else if (snapshot.data is TodoError) {
               return _buildError((snapshot.data as TodoError).message);
@@ -56,13 +63,18 @@ class _TodoPageState extends State<TodoPage> {
   }
 
   Widget _buildList(List<TodoModel> todos) {
-    return ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16.0),
-        itemCount: todos.length,
-        itemBuilder: (context, position) {
-          return TodoListItem(todos[position]);
-        });
+    return RefreshIndicator(
+        onRefresh: () {
+          _todoBloc.refresh();
+          return _refreshCompleter.future;
+          },
+        child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            itemCount: todos.length,
+            itemBuilder: (context, position) {
+              return TodoListItem(todos[position]);
+            }));
   }
 
   @override

@@ -11,15 +11,23 @@ class TodoBloc {
 
   void loadTodoList() {
     _todoStreamController.sink.add(TodoState._loading());
+    _fetchTodoList();
+  }
+
+  void dispose() {
+    _todoStreamController.close();
+  }
+
+  refresh() {
+    _fetchTodoList();
+  }
+
+  _fetchTodoList() {
     _repository.loadAllTodo().then((results) {
       _todoStreamController.sink.add(TodoState._dataLoaded(results));
     }).catchError((error) {
       _todoStreamController.sink.add(TodoState._error(error.toString()));
     });
-  }
-
-  void dispose() {
-    _todoStreamController.close();
   }
 }
 
