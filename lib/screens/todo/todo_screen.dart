@@ -8,9 +8,8 @@ import 'package:flutter_practice/screens/todo/todo_bloc.dart';
 import 'package:flutter_practice/screens/todo/widgets/todo_list_item.dart';
 
 class TodoPage extends StatefulWidget {
-  TodoPage(this._repository);
-
-  final TodoRepository _repository;
+  final TodoRepository repository;
+  TodoPage({Key key, this.repository}): super(key: key);
 
   @override
   _TodoPageState createState() => _TodoPageState();
@@ -22,7 +21,7 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   void initState() {
-    _todoBloc = TodoBloc(widget._repository);
+    _todoBloc = TodoBloc(widget.repository);
     _todoBloc.loadTodoList();
     _refreshCompleter = Completer<void>();
     super.initState();
