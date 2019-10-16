@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_practice/screens/home_screen.dart';
-import 'package:flutter_practice/screens/todo/todo_screen.dart';
 
 void main() => runApp(MyApp());
 

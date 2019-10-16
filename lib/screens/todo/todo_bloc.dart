@@ -1,21 +1,20 @@
-import 'package:flutter_practice/data/model/todomodel.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_practice/bloc/bloc.dart';
+import 'package:flutter_practice/data/model/todo_model.dart';
 import 'package:flutter_practice/data/repository/todo_repository.dart';
 import 'dart:async';
+import 'dart:developer' as developer;
 
-class TodoBloc {
+class TodoBloc extends Bloc {
   final TodoRepository _repository;
   TodoBloc(this._repository);
 
   final _todoStreamController = StreamController<TodoState>();
-  Stream<TodoState> get todos => _todoStreamController.stream;
+  Stream<TodoState> get todoStream => _todoStreamController.stream;
 
   void loadTodoList() {
     _todoStreamController.sink.add(TodoState._loading());
     _fetchTodoList(false);
-  }
-
-  void dispose() {
-    _todoStreamController.close();
   }
 
   refresh() {
@@ -25,9 +24,16 @@ class TodoBloc {
   _fetchTodoList(bool forceUpdate) {
     _repository.loadAllTodo(forceUpdate: forceUpdate).then((results) {
       _todoStreamController.sink.add(TodoState._dataLoaded(results));
-    }).catchError((error) {
-      _todoStreamController.sink.add(TodoState._error(error.toString()));
+    }).catchError((error) async {
+      developer.log(error.toString(), name: 'TodoBloc error');
+      _todoStreamController.sink.add(TodoState._error('Failed to load data.'));
     });
+  }
+
+  @override
+  void dispose() {
+    developer.log('dispose', name: 'TodoBloc info');
+    _todoStreamController.close();
   }
 }
 

@@ -1,8 +1,8 @@
-import 'package:flutter_practice/data/model/todomodel.dart';
-import 'package:flutter_practice/data/remote/TodoApiClient.dart';
+import 'package:flutter_practice/data/model/todo_model.dart';
+import 'package:flutter_practice/data/remote/JsonPlaceholderApiClient.dart';
 
 class TodoRepository {
-  final TodoApiClient apiClient = TodoApiClient();
+  final JsonPlaceholderApiClient apiClient = JsonPlaceholderApiClient();
 
   List<TodoModel> _cachedList;
 

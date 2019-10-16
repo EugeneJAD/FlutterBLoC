@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_practice/data/model/todomodel.dart';
+import 'package:flutter_practice/bloc/bloc_provider.dart';
+import 'package:flutter_practice/data/model/todo_model.dart';
 import 'package:flutter_practice/data/repository/todo_repository.dart';
 import 'package:flutter_practice/screens/todo/todo_bloc.dart';
 import 'package:flutter_practice/screens/todo/widgets/todo_list_item.dart';
 
 class TodoPage extends StatefulWidget {
   final TodoRepository repository;
-  TodoPage({Key key, this.repository}): super(key: key);
+  TodoPage({Key key, this.repository}) : super(key: key);
 
   @override
   _TodoPageState createState() => _TodoPageState();
@@ -29,26 +30,28 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.cyan,
-          title: Text('Todo list'),
-          centerTitle: true,
-        ),
-        body: SafeArea(
-            child: StreamBuilder<TodoState>(
-          stream: _todoBloc.todos,
-          builder: (context, snapshot) {
-            if (snapshot.data is TodoDataLoaded) {
-              _refreshCompleter?.complete();
-              _refreshCompleter = Completer();
-              return _buildList((snapshot.data as TodoDataLoaded).todos);
-            } else if (snapshot.data is TodoError) {
-              return _buildError((snapshot.data as TodoError).message);
-            } else
-              return _buildLoading();
-          },
-        )));
+    return BlocProvider<TodoBloc>(
+        bloc: _todoBloc,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.cyan,
+              title: Text('Todo list'),
+              centerTitle: true,
+            ),
+            body: SafeArea(
+                child: StreamBuilder<TodoState>(
+              stream: _todoBloc.todoStream,
+              builder: (context, snapshot) {
+                if (snapshot.data is TodoDataLoaded) {
+                  _refreshCompleter?.complete();
+                  _refreshCompleter = Completer();
+                  return _buildList((snapshot.data as TodoDataLoaded).todos);
+                } else if (snapshot.data is TodoError) {
+                  return _buildError((snapshot.data as TodoError).message);
+                } else
+                  return _buildLoading();
+              },
+            ))));
   }
 
   Widget _buildLoading() {
@@ -66,7 +69,7 @@ class _TodoPageState extends State<TodoPage> {
         onRefresh: () {
           _todoBloc.refresh();
           return _refreshCompleter.future;
-          },
+        },
         child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16.0),
@@ -74,11 +77,5 @@ class _TodoPageState extends State<TodoPage> {
             itemBuilder: (context, position) {
               return TodoListItem(todos[position]);
             }));
-  }
-
-  @override
-  void dispose() {
-    _todoBloc.dispose();
-    super.dispose();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_practice/data/model/todomodel.dart';
+import 'package:flutter_practice/data/model/todo_model.dart';
 import 'package:flutter_practice/screens/todo/details/todo_details_screen.dart';
 
 class TodoListItem extends StatefulWidget {

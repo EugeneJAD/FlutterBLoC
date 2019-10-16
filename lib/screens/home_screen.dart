@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_practice/data/repository/photo_repository.dart';
 import 'package:flutter_practice/data/repository/todo_repository.dart';
 import 'package:flutter_practice/screens/photos/photos_screen.dart';
 import 'package:flutter_practice/screens/todo/todo_screen.dart';
@@ -12,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _todoPage = TodoPage(key: PageStorageKey('Todo_Page'), repository: TodoRepository());
-  final _photosPage = PhotosPage(key: PageStorageKey('Photos_Page'));
+  final _photosPage = PhotosPage(key: PageStorageKey('Photos_Page'), repository: PhotoRepository());
   final PageStorageBucket bucket = PageStorageBucket();
   List<Widget> _pages;
   int _currentIndex = 0;

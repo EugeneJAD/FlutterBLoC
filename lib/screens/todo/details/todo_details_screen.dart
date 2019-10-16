@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_practice/data/model/todomodel.dart';
+import 'package:flutter_practice/data/model/todo_model.dart';
 
 class TodoDetailsPage extends StatefulWidget {
   final TodoModel _todoModel;

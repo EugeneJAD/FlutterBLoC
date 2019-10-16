@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-part 'todomodel.g.dart';
+part 'generated/todo_model.g.dart';
 
 @JsonSerializable()
 class TodoModel {
