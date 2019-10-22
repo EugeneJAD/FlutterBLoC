@@ -1,6 +1,7 @@
 # flutter_practice
+This is a simple app that uses BLoC (Business Logic Component) pattern to fetch and display data from the remote source. 
 
-A new Flutter application.
+<img src="screenshots/sreenshot1.png" alt="" width="270" height="480"/>|<img src="screenshots/sreenshot2.png" alt="" width="270" height="480"/>|<img src="screenshots/sreenshot3.png" alt="" width="270" height="480"/>
 
 ## Getting Started
 
